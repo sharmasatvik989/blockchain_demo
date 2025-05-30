@@ -1,128 +1,143 @@
-Simple Python Blockchain
+# Simple Python Blockchain
 
-A minimal, locally deployable blockchain implemented in a single Python file, with a basic Proof-of-Work consensus algorithm and a REST API for submitting transactions, mining blocks, and inspecting the chain.
+A minimal, locally deployable blockchain implemented in a single Python file, featuring:
 
-Contents
+* **Proof-of-Work consensus** (four leading zeros)
+* **REST API** for transactions, mining, and chain inspection
+* **Single-node** setup, ideal for local testing and learning
 
-blockchain.py — All blockchain logic and HTTP endpoints.
+---
 
-Prerequisites
+## 🚀 Getting Started
 
-Python 3.8 or higher
+These instructions will help you run the blockchain on your local machine.
 
-Flask web framework
+### Prerequisites
 
-Installation
+* **Python 3.8+**
+* **pip** (should come with Python)
+* (Optional) **virtualenv** or **venv** for isolated environment
 
-Clone or download this repository.
+### Installation
 
-Install dependencies:
+1. **Clone the repository**
 
-pip install flask
+   ```bash
+   git clone https://github.com/your-repo/local_blockchain.git
+   cd local_blockchain
+   ```
+2. **Install dependencies**
 
-Running the Node
+   ```bash
+   pip install flask
+   ```
 
-Launch the Flask server (default port 5000):
+---
 
+## 🏃‍♂️ Running the Node
+
+Start the Flask server (default port `5000`):
+
+```bash
 python blockchain.py
+```
 
-The server will be available at http://localhost:5000/.
+Once running, the API will be available at `http://localhost:5000/`.
 
-API Endpoints
+---
 
-Endpoint
+## 📒 API Reference
 
-Method
+| Endpoint            | Method | Description                                           |
+| ------------------- | ------ | ----------------------------------------------------- |
+| `/transactions/new` | POST   | Submit a new transaction                              |
+| `/mine`             | GET    | Perform mining, add a new block, and receive a reward |
+| `/chain`            | GET    | Retrieve the full blockchain                          |
 
-Description
+### 1. Submit a Transaction
 
-/transactions/new
-
-POST
-
-Submit a new transaction
-
-/mine
-
-GET
-
-Trigger Proof-of-Work, mine a new block, and receive a reward transaction
-
-/chain
-
-GET
-
-Retrieve the full blockchain
-
-1. Submit a Transaction
-
+```bash
 curl -X POST http://localhost:5000/transactions/new \
      -H "Content-Type: application/json" \
      -d '{"sender":"alice","recipient":"bob","amount":5}'
+```
 
-Response:
+**Response**
 
+```json
 { "message": "Transaction will be in block 2" }
+```
 
-2. Mine a Block
+### 2. Mine a Block
 
+```bash
 curl http://localhost:5000/mine
+```
 
-Response:
+**Response**
 
+```json
 {
   "message": "New block forged",
   "block": {
-     "index": 2,
-     "timestamp": 1627889187.123456,
-     "transactions": [{ "sender": "0", "recipient": "you", "amount": 1 }],
-     "nonce": 52347,
-     "previous_hash": "0000ab34..."
+    "index": 2,
+    "timestamp": 1627889187.123456,
+    "transactions": [
+      { "sender": "0", "recipient": "you", "amount": 1 }
+    ],
+    "nonce": 52347,
+    "previous_hash": "0000ab34..."
   }
 }
+```
 
-3. View the Full Chain
+### 3. View the Full Chain
 
+```bash
 curl http://localhost:5000/chain
+```
 
-Response:
+**Response**
 
+```json
 {
-  "chain": [...],
+  "chain": [ ... ],
   "length": 2
 }
+```
 
-How It Works
+---
 
-Data Structures
+## 🧠 How It Works
 
-Blocks are simple Python dicts containing index, timestamp, transactions, nonce, and previous_hash.
+1. **Data Structures**
 
-Transactions are appended to current_transactions until a block is mined.
+   * **Blocks**: Python dicts containing `index`, `timestamp`, `transactions`, `nonce`, `previous_hash`.
+   * **Transactions**: Queued in `current_transactions` until mined.
 
-Proof-of-Work
+2. **Proof-of-Work**
 
-The proof_of_work method finds a nonce such that sha256(last_nonce + nonce) yields a hash with four leading zeros.
+   * Find a `nonce` such that `SHA256(last_nonce + nonce)` starts with **four zeros**.
+   * Miner receives a reward transaction from `"0"` to the node owner.
 
-Upon mining, the miner receives a reward transaction from "0" to "you".
+3. **REST API**
 
-REST API
+   * Built with Flask; exposes three endpoints for interaction.
 
-Built with Flask; three endpoints to submit transactions, mine blocks, and fetch the chain.
+---
 
-Next Steps
+## 🔄 Next Steps / Iterations
 
-After confirming this basic node runs correctly, you can iterate:
+After verifying the basic node works, you can extend:
 
-Add peer-to-peer synchronization
+* ✅ **Peer-to-Peer Sync** (network layer)
+* ✅ **Module Refactoring** (OOP structure)
+* ✅ **Configurable Ports & Difficulty**
+* ✅ **Persistent Storage** (SQLite, JSON files)
+* ✅ **Alternate Consensus** (Proof-of-Authority)
 
-Separate modules with OOP structure
+---
 
-Configurable ports and difficulty
+## 📄 License
 
-Persistent storage (SQLite, JSON files)
-
-Alternative consensus (Proof-of-Authority)
-
-This project is released under the MIT License.
-
+This project is released under the **MIT License**. See `LICENSE` for de
