@@ -4,12 +4,14 @@ import time
 from flask import Flask, request, jsonify
 
 class Blockchain:
+    #Defining the Chain and transaction
     def __init__(self):
         self.chain = []
         self.current_transactions = []
         # create genesis block
         self.new_block(nonce=100, previous_hash='1')
 
+    #Adding a new block with identifiers
     def new_block(self, nonce, previous_hash=None):
         block = {
             'index': len(self.chain) + 1,
@@ -22,6 +24,7 @@ class Blockchain:
         self.chain.append(block)
         return block
 
+    #Adding a new transaction with transactional identifiers
     def new_transaction(self, sender, recipient, amount):
         self.current_transactions.append({
             'sender': sender,
@@ -30,15 +33,18 @@ class Blockchain:
         })
         return self.last_block['index'] + 1
 
+    #Will not take self as first argument when class is instantiated 
     @staticmethod
     def hash(block):
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
+    #Read- only attributes
     @property
     def last_block(self):
         return self.chain[-1]
 
+    #Mining a new block
     def proof_of_work(self, last_nonce):
         nonce = 0
         while True:
@@ -48,7 +54,7 @@ class Blockchain:
                 return nonce
             nonce += 1
 
-# instantiate
+# Instantiate
 app = Flask(__name__)
 blockchain = Blockchain()
 
